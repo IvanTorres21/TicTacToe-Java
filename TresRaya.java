@@ -1,4 +1,5 @@
 
+
 import java.util.Scanner;
 import java.io.IOException;
 /**
@@ -87,7 +88,12 @@ public static void clrscr(){
     }
     return copy;
   }
-
+/**
+ * Función para que el ordenador eliga su próximo movimiento
+ * @param map Mapa sobre el que se va a elegir el movimiento
+ * @param turn turno actual
+ * @return Devuelve una posición, esto solo se usa realmente cuando se comprueba si el jugador puede ganar
+ */
   public static int turnOrd(int[][] map, int turn) {
 
     int[][] copy = copyMap(map); //Copiamos el mapa ya que tenemos que modificarlo
