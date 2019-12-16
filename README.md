@@ -1,10 +1,8 @@
 # Tres en Raya en Java
 
-## Ejecutarlo
+## Compilarlo y Ejecutarlo
 
-Para ejecutar el juego necesitaras descargar el .class y ejecutarlo con una JVM.
-
-En caso de que no se incie correctamente descarga el .java y compilalo en la consola con 
+Compila el codigo fuente con
 ```Console
 javac TresRaya.java
 ```
