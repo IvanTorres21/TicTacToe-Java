@@ -38,17 +38,20 @@ public class TresRaya {
         putInput(opt, map, turnAct);
       } else if (turnAct % 2 == 0) {
         System.out.println("Turno máquina: ");
-        turnOrd(map, 2);
+        turnOrd(map, turnAct);
       }
       printMap(map);
-    } while (playing && !isWon(map, turnAct) && turnAct < 10);
+    } while (playing && !isWon(map, turnAct) && turnAct < 9);
     //Miramos quien ha ganado
-    if (turnAct % 2 == 0) {
+    if (isWon(map, 2)) {
 
       System.out.println("Gana el ordenador");
-    } else {
+    } else if(isWon(map,1)){
 
       System.out.println("Gana el jugador");
+    } else {
+      
+      System.out.println("Empate");
     }
   }
 
@@ -70,13 +73,14 @@ public class TresRaya {
     return copy;
   }
 
-  public static boolean turnOrd(int[][] map, int turnAct) {
+  public static int turnOrd(int[][] map, int turn) {
 
     int[][] copy = copyMap(map); //Copiamos el mapa ya que tenemos que modificarlo
+    int turnAct = turn;
     int posChoosed = 0;
     int lastDrawPos = 0; //Para acordarnos de la última posición en la que empatabamos.
     int points = 0;
-    for (int i = 1; i <= 9 && points != 2 && points != -1; i++) { //Pasamos por las nueve posiciones
+    for (int i = 1; i <= 9 && points != 2; i++) { //Pasamos por las nueve posiciones
 
       if (isEmpty(copy, i)) {
 
@@ -85,45 +89,46 @@ public class TresRaya {
         //Comprobamos si hemos ganado con ese movimiento o si hemos perdido
         if (isWon(copy, turnAct)) {
 
-          posChoosed = i;
-          points = 2; //En caso de que hayamos ganado le asignamos 2 puntos
           if (turnAct % 2 != 0) {
-            
-            return true; //En caso de que comprobemos si gana el jugador devolvemos verdadero
+
+            return (10+i); //En caso de que comprobemos si gana el jugador devolvemos verdadero
+          } else {
+            posChoosed = i;
+            points = 2; //En caso de que hayamos ganado le asignamos 2 puntos
           }
         } else {
 
           points = 0; //En caso de que no importe el momivimento le asignamos 0 puntos y seguimos comprobando
           if (turnAct % 2 == 0) {
-
-            if (turnOrd(copy, 1)) {
+            int posPer = turnOrd(copy, 3);
+            if (posPer >10) {
               points = -1;
+              posChoosed = posPer-10;
             }
           }
-          if (points != -1) {
-            
+          if (points == 0) {
+
             lastDrawPos = i;
           }
         }
         putInput(i, copy, -1);
       }
     }
-    if (points == 0 || points == -1) {
-
-      posChoosed = lastDrawPos;
-    }
-    if (posChoosed == 0) {
-      
-      do {
-        
-        posChoosed = (int) (Math.random()*8) +1;
-      } while (!isEmpty(copy, posChoosed));
-    }
     if (turnAct % 2 == 0) {
+      if (points == 0) {
 
+        posChoosed = lastDrawPos;
+      }
+      if (posChoosed == 0) {
+
+        do {
+
+          posChoosed = (int) (Math.random() * 8) + 1;
+        } while (!isEmpty(copy, posChoosed));
+      }
       putInput(posChoosed, map, 2);
     }
-    return false;
+    return -1;
   }
 
   /**
@@ -323,12 +328,14 @@ public class TresRaya {
       cont = -1;
     }
     //Prueba diagonal 2
+    int j = 0;
     for (int i = 2; i >= 0 && cont != 2; i--) {
 
-      if (map[i][i] == valJug) {
+      if (map[i][j] == valJug) {
 
         cont++;
       }
+      j++;
     }
     if (cont != 2) {
 
