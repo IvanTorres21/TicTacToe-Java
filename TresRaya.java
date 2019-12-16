@@ -1,5 +1,3 @@
-package tres_raya;
-
 import java.util.Scanner;
 
 /**
