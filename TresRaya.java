@@ -1,7 +1,8 @@
-import java.util.Scanner;
 
+import java.util.Scanner;
+import java.io.IOException;
 /**
- *
+ * Juego del tres en raya en el que se juega contra el ordenador
  * @author ivan
  */
 public class TresRaya {
@@ -21,7 +22,12 @@ public class TresRaya {
       }
       System.out.println();
     }
-    int turnAct = 0; //Turno actual, los impares son el usuario, los pares el ordenador.
+    System.out.println("Bienvenido al Tres en Raya, te vas a enfrentar al ordenador.");
+    System.out.println("¿Quieres empezar tú, o darle la ventaja al ordenador?: ");
+    System.out.print("1 - Empieza el Ordenador\n2 - Empiezas tú\n");
+    int turnAct = Integer.parseInt(s.nextLine()); //Turno actual, los impares son el usuario, los pares el ordenador.
+    turnAct -= 2;
+    int turnMax = turnAct + 9;
     do { //Bucle de juego
 
       turnAct++;
@@ -39,7 +45,7 @@ public class TresRaya {
         turnOrd(map, turnAct);
       }
       printMap(map);
-    } while (playing && !isWon(map, turnAct) && turnAct < 9);
+    } while (playing && !isWon(map, turnAct) && turnAct < turnMax);
     //Miramos quien ha ganado
     if (isWon(map, 2)) {
 
@@ -52,7 +58,18 @@ public class TresRaya {
       System.out.println("Empate");
     }
   }
-
+/**
+ * Function that clears the screen in Java
+ */
+public static void clrscr(){
+    //Clears Screen in java
+    try {
+        if (System.getProperty("os.name").contains("Windows"))
+            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+        else
+            Runtime.getRuntime().exec("clear");
+    } catch (IOException | InterruptedException ex) {}
+}
   /**
    * Función para hacer una copia del mapa
    *
@@ -76,9 +93,8 @@ public class TresRaya {
     int[][] copy = copyMap(map); //Copiamos el mapa ya que tenemos que modificarlo
     int turnAct = turn;
     int posChoosed = 0;
-    int lastDrawPos = 0; //Para acordarnos de la última posición en la que empatabamos.
     int points = 0;
-    for (int i = 1; i <= 9 && points != 2; i++) { //Pasamos por las nueve posiciones
+    for (int i = 1; i <= 9 && points != 2 && points != -1; i++) { //Pasamos por las nueve posiciones para comprobar si ganamos o empatamos
 
       if (isEmpty(copy, i)) {
 
@@ -104,25 +120,17 @@ public class TresRaya {
               posChoosed = posPer-10;
             }
           }
-          if (points == 0) {
-
-            lastDrawPos = i;
-          }
         }
         putInput(i, copy, -1);
       }
     }
     if (turnAct % 2 == 0) {
-      if (points == 0) {
-
-        posChoosed = lastDrawPos;
-      }
-      if (posChoosed == 0) {
+      if (points == 0) { //En caso de que no pierda ni gane en este movimiento pasamos al siguiente
 
         do {
-
-          posChoosed = (int) (Math.random() * 8) + 1;
-        } while (!isEmpty(copy, posChoosed));
+          
+          posChoosed = (int) (Math.random()*8) + 1;
+        } while(!isEmpty(copy, posChoosed));
       }
       putInput(posChoosed, map, 2);
     }
@@ -136,6 +144,7 @@ public class TresRaya {
    */
   public static void printMap(int[][] map) {
 
+    clrscr();
     char toPrint = ' ';
     for (int i = 0; i < 3; i++) {
       System.out.print(" |");
